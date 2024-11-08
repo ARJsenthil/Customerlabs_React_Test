@@ -16,7 +16,7 @@ export default function Segment({ onClose }) {
     const [segmentName, setSegmentName] = useState("")
     const [inActiveSegmentList, setInActiveSegmentList] = useState([...schema])
     const [activeSegmentList, setActiveSegmentList] = useState([])
-    const [selectedSegment, setSelectedSegment] = useState([])
+    const [selectedSegment, setSelectedSegment] = useState(-1)
     const inputHandle = (e) => {
         var id = e.target.id;
         var value = e.target.value;
@@ -31,6 +31,12 @@ export default function Segment({ onClose }) {
     const addSegment = () => {
         setActiveSegmentList([...activeSegmentList, ...inActiveSegmentList.filter(data => data.value == selectedSegment)])
         setInActiveSegmentList([...inActiveSegmentList.filter(data => data.value != selectedSegment)])
+        setSelectedSegment(-1)
+    }
+
+    const removeSegment = (segment) => {
+        setActiveSegmentList([...activeSegmentList.filter(data => data.value != segment)])
+        setInActiveSegmentList([...inActiveSegmentList, ...activeSegmentList.filter(data => data.value == segment)])
         
     }
     
@@ -55,7 +61,7 @@ export default function Segment({ onClose }) {
         
     }
     return (
-            <div className="segment-container p-0 col-lg-4 col-md-6 border ml-auto">
+            <div className="segment-container p-0 col-lg-4 col-md-6 border border-secondary ml-auto overflow-scroll">
                 <div className="menu clearfix bg-primary mb-1 fit-c p-2 text-white">
                 <svg onClick={onClose} xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="cursor-pointer float-start bi bi-chevron-left" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
@@ -68,15 +74,21 @@ export default function Segment({ onClose }) {
                 <div className="top-container">
                     <div className="d-grid gap-2 fit-c">
                         <label for="segmentName">Enter the Name of the segment</label>
-                        <input type="text" name="segmentName" value={segmentName} id="segment_name" className="p-1" onChange={inputHandle} />
+                        <input type="text" name="segmentName" value={segmentName} placeholder="Name of the Segment" id="segment_name" className="p-1" onChange={inputHandle} />
                     </div>
                     <p className="fit-c pt-2">To save your segment you need to add the schemas to build the query</p>
                     <div className="select-container fit-c d-grid gap-2">
-                        <div className="d-grid gap-1">
-                            { activeSegmentList.map((data) => 
-                                <label value={data.value} className="btn w-100 border rounded">{data.label}</label>
-                            ) }
+                        
+                            { activeSegmentList.length == 0 ? "" : 
+                            <div className="d-grid gap-1 border border-primary p-3">
+                            {activeSegmentList.map((data) => 
+                                <div className="d-flex gap-1">
+                                <label value={data.value} className="btn w-100 border border-secondary rounded">{data.label}</label>
+                                <button className="btn border border-secondary" onClick={() => removeSegment(data.value)}>-</button>
+                                </div>
+                            )}
                         </div>
+                            }
                         <select id="select" className="p-2 fit-c text-center" value={selectedSegment} onChange={inputHandle}>
                             <option value={-1}>Add schema to segment</option>
                             {inActiveSegmentList.map((data) => 
