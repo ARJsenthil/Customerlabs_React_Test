@@ -1,0 +1,22 @@
+
+
+/* body {
+  overflow: hidden;
+} */
+
+.segment-container {
+  /* justify-content: space-between; */
+  height: 100vh;
+}
+
+.btn-container {
+  height: fit-content;
+  width: fit-content; 
+}
+.fit-c {
+  height: fit-content;
+  
+}
+.cursor-pointer {
+  cursor: pointer;
+}
