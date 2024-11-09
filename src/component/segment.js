@@ -5,13 +5,13 @@ import swal from "sweetalert";
 export default function Segment({ onClose }) {
 
     const schema = [
-        { label: "First Name", value: "first_name" },
-        { label: "Last Name", value: "last_name" },
-        { label: "Gender", value: "gender" },
-        { label: "Age", value: "age" },
-        { label: "Account Name", value: "account_name" },
-        { label: "City", value: "city" },
-        { label: "State", value: "state" },
+        { id : 1, label: "First Name", value: "first_name" },
+        { id : 2, label: "Last Name", value: "last_name" },
+        { id : 3, label: "Gender", value: "gender" },
+        { id : 4, label: "Age", value: "age" },
+        { id : 5, label: "Account Name", value: "account_name" },
+        { id : 6, label: "City", value: "city" },
+        { id : 7, label: "State", value: "state" },
     ]
     const [segmentName, setSegmentName] = useState("")
     const [inActiveSegmentList, setInActiveSegmentList] = useState([...schema])
@@ -29,22 +29,33 @@ export default function Segment({ onClose }) {
         }
     }
     const addSegment = () => {
-        setActiveSegmentList([...activeSegmentList, ...inActiveSegmentList.filter(data => data.value == selectedSegment)])
-        setInActiveSegmentList([...inActiveSegmentList.filter(data => data.value != selectedSegment)])
+        var tempActiveList = [...activeSegmentList, ...inActiveSegmentList.filter(data => data.value == selectedSegment)];
+        var tempInActiveList = [...inActiveSegmentList.filter(data => data.value != selectedSegment)];
+        tempActiveList.sort((a, b) => a.id - b.id);
+        tempInActiveList.sort((a, b) => a.id - b.id);
+        setActiveSegmentList(tempActiveList)
+        setInActiveSegmentList(tempInActiveList)
         setSelectedSegment(-1)
     }
     const changeSegment = (e, oldData) => {
         var newData = e.target.value;
         if(newData != oldData) {
-            setActiveSegmentList([...activeSegmentList.filter(data => data.value != oldData), ...inActiveSegmentList.filter(data => data.value == newData)])
-            setInActiveSegmentList([...inActiveSegmentList.filter(data => data.value != newData), ...activeSegmentList.filter(data => data.value == oldData)])
+            var tempActiveList = [...activeSegmentList.filter(data => data.value != oldData), ...inActiveSegmentList.filter(data => data.value == newData)];
+            var tempInActiveList = [...inActiveSegmentList.filter(data => data.value != newData), ...activeSegmentList.filter(data => data.value == oldData)];
+            tempActiveList.sort((a, b) => a.id - b.id);
+            tempInActiveList.sort((a, b) => a.id - b.id);
+            setActiveSegmentList(tempActiveList)
+            setInActiveSegmentList(tempInActiveList)
         }
     }
 
     const removeSegment = (segment) => {
-        setActiveSegmentList([...activeSegmentList.filter(data => data.value != segment)])
-        setInActiveSegmentList([...inActiveSegmentList, ...activeSegmentList.filter(data => data.value == segment)])
-        
+        var tempActiveList = [...activeSegmentList.filter(data => data.value != segment)];
+        var tempInActiveList = [...inActiveSegmentList, ...activeSegmentList.filter(data => data.value == segment)];
+        tempActiveList.sort((a, b) => a.id - b.id);
+        tempInActiveList.sort((a, b) => a.id - b.id);
+        setActiveSegmentList(tempActiveList)
+        setInActiveSegmentList(tempInActiveList)
     }
     
     const saveSegment = async () => {
