@@ -33,6 +33,13 @@ export default function Segment({ onClose }) {
         setInActiveSegmentList([...inActiveSegmentList.filter(data => data.value != selectedSegment)])
         setSelectedSegment(-1)
     }
+    const changeSegment = (e, oldData) => {
+        var newData = e.target.value;
+        if(newData != oldData) {
+            setActiveSegmentList([...activeSegmentList.filter(data => data.value != oldData), ...inActiveSegmentList.filter(data => data.value == newData)])
+            setInActiveSegmentList([...inActiveSegmentList.filter(data => data.value != newData), ...activeSegmentList.filter(data => data.value == oldData)])
+        }
+    }
 
     const removeSegment = (segment) => {
         setActiveSegmentList([...activeSegmentList.filter(data => data.value != segment)])
@@ -83,8 +90,13 @@ export default function Segment({ onClose }) {
                             <div className="d-grid gap-1 border border-primary p-3">
                             {activeSegmentList.map((data) => 
                                 <div className="d-flex gap-1">
-                                <label value={data.value} className="btn w-100 border border-secondary rounded">{data.label}</label>
-                                <button className="btn border border-secondary" onClick={() => removeSegment(data.value)}>-</button>
+                                <select onChange={(e) => changeSegment(e, data.value)} value={data.value} className="btn w-100 border border-secondary rounded">
+                                    <option value={data.value} >{data.label}</option>
+                                    {inActiveSegmentList.map((data) => 
+                                        <option value={data.value}>{data.label}</option>
+                                    )}
+                                </select>
+                                <button className="btn btn-danger" onClick={() => removeSegment(data.value)}>-</button>
                                 </div>
                             )}
                         </div>
